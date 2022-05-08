@@ -12,7 +12,11 @@
 
     #检查mysql
     mysql --version
-    
+
+    #Ubuntu安装mysql数据库
+    sudo apt install mysql-server
+    apt-get install mysql-client
+
     #PyMySQL部署
     sudo apt-get install -y python3-pip
     sudo pip3 install PyMySQL
