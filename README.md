@@ -46,26 +46,26 @@
         if.exist.fisco=yes
         fisco.dir= /home/ubuntu/fisco/nodes/127.0.0.1/  本地fisco包含sdk的文件夹的绝对地址
 
-    # 部署并启动所有服务
+    #部署并启动所有服务
     python3 deploy.py installAll
     启动成功后以ip：5000访问webase 默认账号admin 默认密码Abcd1234
     可能遇到验证码无法出现，以及系统错误的提示，可以通过：
         netstat -anlp | grep 5001 检查是否webase-node-mgr未能正常启动
         cd webase-deploy/webase-node-mgr/conf
         vi application.yml
-        将# database connection configuration下的
+        将# database connection configuration  下的
             url改为jdbc:mysql://localhost:3306/webasenodemanager?autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
         保存文件后回到webase-deploy/webase-node-mgr 通过bash start.sh 启动服务
 
 #通过服务方式启动实现在Ubuntu上的Data-Export的搭建   
 
-    #拉取代码
+    # 拉取代码
     git clone https://github.com/WeBankBlockchain/Data-Export.git 
 
-    #进入安装路径
+    # 进入安装路径
     cd Data-Export/tools
     
-    #配置文件设置
+    # 配置文件设置
     vi config/application.properties
 
         # Channel方式启动，与java sdk一致，需配置证书
