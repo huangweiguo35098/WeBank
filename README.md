@@ -29,7 +29,20 @@
     cd webase-deploy
     vi common.properties
         docker.mysql=0
-        将数据库port，user，password改成mysql对应的port，user，password
+        #将数据库port，user，password改成mysql对应的port，user，password
+        # Mysql database configuration of WeBASE-Node-Manager
+        mysql.ip=localhost
+        mysql.port=3306
+        mysql.user=root
+        mysql.password=123456
+        mysql.database=webasenodemanager
+
+        # Mysql database configuration of WeBASE-Sign
+        sign.mysql.ip=localhost
+        sign.mysql.port=3306
+        sign.mysql.user=root
+        sign.mysql.password=123456
+        sign.mysql.database=webasesign
         if.exist.fisco=yes
         fisco.dir= /home/ubuntu/fisco/nodes/127.0.0.1/  本地fisco包含sdk的文件夹的绝对地址
 
@@ -67,6 +80,12 @@
         system.db0.dbUrl=jdbc:mysql://localhost:3306/data_export?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
         system.db0.user=root
         system.db0.password=123456
+
+        #################################### Export Contract Info Config ####################################
+        ###合约存放位置，理论上应该选择webase上部署合约上所生成合约的位置，但没找到，只好将对应合约存于solidity文件夹下
+        system.solPath=./config/solidity
+        #The options available include: 0.4.25.1;0.5.2.0;0.6.10.0
+        system.solcVersion=0.4.25.1
 
         ### 是否生成grafana可调用的json文件
         system.grafanaEnable=true
