@@ -192,8 +192,7 @@
 
         通过navicat连接数据库进入mysql数据库，打开user表，将root行的host从localhost改为%，并通过flush privileges; #更新权限 
 
-    通过import导入json文件，理论上直接改变docker grafana里的配置使其默认启动，或是不通过docker，直接使用grafana会更好，
-    但还没研究清楚。 
+    通过import导入json文件，理论上直接改变docker grafana里的配置使其默认启动，但还没研究清楚。 
     将json文件中“panels”里的所有“datasource”后内容改为在grafana中数据源的名字
     如：想要访问的grafana数据源名为Mysql 就令“datasource”：“Mysql”
     默认情况下数据源名为MySQL，json中默认为“datasource”：“MySQL”
