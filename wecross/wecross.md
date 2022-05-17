@@ -56,16 +56,16 @@
         #部署系统合约
             #非国密链
                 # 部署代理合约
-                bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos -P
+                bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos-test1 -P
 
                 # 部署桥接合约
-                bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos -H
+                bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos-test1 -H
             #国密链
                 # 部署代理合约
-                bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos -P
+                bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -P
 
                 # 部署桥接合约
-                bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos -H
+                bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -H
 
 
     #接入Hyperledger Fabric 2
