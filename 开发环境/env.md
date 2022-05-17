@@ -39,4 +39,20 @@
         #Docker-Compose安装
             sudo curl -L https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
+    #Java环境部署
+        sudo apt install -y default-jdk
+        sudo vi /etc/profile 打开文件在最后添加
+            export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+            export PATH=$PATH:$JAVA_HOME/bin
+        保存后再 source  /etc/profile
 
+    #检查mysql
+        mysql --version
+
+        #Ubuntu安装mysql数据库
+            sudo apt install mysql-server
+            apt-get install mysql-client
+
+    #PyMySQL部署
+        sudo apt-get install -y python3-pip
+        sudo pip3 install PyMySQL
