@@ -56,3 +56,56 @@
     #PyMySQL部署
         sudo apt-get install -y python3-pip
         sudo pip3 install PyMySQL
+
+    #go部署
+        # 解压go文件
+            tar zxvf go*.tar.gz
+        
+        # 移动go文件目录
+            mv go/ /usr/local/
+        
+        # 编辑环境配置
+            sudo vim /etc/profile
+
+        在文件末尾添加以下内容
+            export GOROOT=/usr/local/go
+            export GOPATH=$HOME/go
+            export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+        保存并退出 vim，使用 source 命令使添加的配置信息生效
+            source /etc/profile
+        
+        #安装完成后建议配置 go 语言使其从公共代理镜像中下载依赖代码
+            go env -w GO111MODULE=on
+            go env -w GOPROXY=https://goproxy.io,direct
+
+    搭建node与npm
+        # nodejs
+            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash
+            sudo apt-get install -y nodejs
+        # npm
+            sudo apt-get install npm
+    
+    端口开放
+        #查看端口开放情况
+            sudo iptables -vnL
+
+        #开放端口
+            sudo iptables -I INPUT -p tcp --dport 8250 -j ACCEPT #可将8250改成想要开放的端口
+            sudo iptables-save
+
+    添加或删除SWAP交换分区
+        #显示是否使用SWAP
+            sudo swapon --show
+        #添加SWAP交换分区
+            sudo fallocate -l 8G /swapfile
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+            #保证可持久化
+                sudo vi /etc/fstab 
+                 添加行：/swapfile swap swap defaults 0 0
+        #删除SWAP交换分区
+            sudo swapoff -v /swapfile
+            #在 /etc/fstab 文件中删除有效 swap 的行
+            sudo rm /swapfile
