@@ -69,7 +69,105 @@
 
 
     #接入Hyperledger Fabric 2
-        还在研究
+        #搭建区块链,基于wecross提供的demo快速搭建
+            #检查go,docker,docker Compose
+                go version
+            #安装go
+                # 解压go文件
+                tar zxvf go*.tar.gz
+                
+                # 移动go文件目录
+                mv go/ /usr/local/
+                
+                # 编辑环境配置
+                sudo vim /etc/profile
+
+                在文件末尾添加以下内容
+
+                export GOROOT=/usr/local/go
+                export GOPATH=$HOME/go
+                export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+                保存并退出 vim，使用 source 命令使添加的配置信息生效
+
+                source /etc/profile
+                
+                #安装完成后建议配置 go 语言使其从公共代理镜像中下载依赖代码
+                go env -w GO111MODULE=on
+                go env -w GOPROXY=https://goproxy.io,direct
+
+            mkdir -p ~/fabric && cd ~/fabric
+            bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_demo.sh)
+            cp ./wecross-demo/fabric2/* ./
+            bash build.sh
+            
+            #搭建成功，查看Fabric链各个容器运行状态。
+                docker ps
+        # 配置内置账户
+            #生成账户配置框架
+                # 切换至对应跨链路由的主目录
+                    cd ~/wecross-networks/routers-test1/127.0.0.1-8251-25501/
+
+                # 用脚本生成Fabric账户配置：账户类型（Fabric1.4），账户名（fabric_admin）
+                # 接入Fabric链，需要配置一个admin账户
+                    bash add_account.sh -t Fabric2.0 -n fabric2_admin 
+
+                # 为Fabric链的每个Org都配置一个admin账户，此处有两个org（Org1和Org2），分别配两个账户
+
+                # 配Org1的admin
+                    bash add_account.sh -t Fabric2.0 -n fabric2_admin_org1
+
+                # 配Org2的admin
+                    bash add_account.sh -t Fabric2.0 -n fabric2_admin_org2
+            #完成配置
+                #修改账户配置
+                    vim conf/accounts/fabric2_admin_org2/account.toml
+                    # 修改mspid，将 'Org1MSP' 更改为 'Org2MSP'
+                #拷贝证书文件
+                    #Fabric链的证书位于organizations目录，请参考以下命令并根据实际情况完成相关证书的拷贝
+
+                    cd ~/wecross-networks/routers-payment/127.0.0.1-8251-25501
+                    # 配置fabric_admin 
+                        # 拷贝私钥
+                            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk conf/accounts/fabric2_admin/account.key
+                        # 拷贝证书
+                            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem  conf/accounts/fabric2_admin/account.crt
+
+                    # 配置fabric_admin_org1 
+                        # 拷贝私钥
+                            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk  conf/accounts/fabric2_admin_org1/account.key
+                        # 拷贝证书
+                            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem   conf/accounts/fabric2_admin_org1/account.crt
+
+                    # 配置fabric_admin_org2 
+                        # 拷贝私钥
+                            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/*_sk conf/accounts/fabric2_admin_org2/account.key
+                        # 拷贝证书
+                            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem conf/accounts/fabric2_admin_org2/account.crt
+                #配置插件
+                    #生成插件配置框架
+                        进入跨链路由的主目录，用add_chain.sh脚本在conf目录下生成Fabric链的配置框架。
+
+                        cd ~/wecross-networks/routers-payment/127.0.0.1-8251-25501
+
+                        # -t 链类型，-n 指定链名字，可根据-h查看使用说明
+                        bash add_chain.sh -t Fabric2.0 -n fabric2
+                    #完成配置
+                        #拷贝证书
+                            # 拷贝orderer证书
+                                cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem conf/chains/fabric2/orderer-tlsca.crt
+                            #拷贝org1证书
+                                cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt conf/chains/fabric2/org1-tlsca.crt
+                            #拷贝org2证书
+                                cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt conf/chains/fabric2/org2-tlsca.crt
+                        #编辑配置文件
+                            #配置文件stub.toml配置项
+            #部署系统合约
+                # 部署代理合约
+                    bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -P
+
+                # 部署桥接合约
+                    bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -H
 
 
     #部署账户服务
