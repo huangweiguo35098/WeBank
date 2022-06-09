@@ -6,7 +6,7 @@
     简单来说对于一条部署在本地的链想要访问其他服务器上的链，只需部署一个跨链路由并将其接入，就可以与其他的跨链路由下的
     链进行数据交流了（个人理解）。需要注意的是跨链路由是通过p2p进行数据交流的，并且只会在具有相同根证书的路由之间进行数据交流。
     
-###创建手动组网的操作目录
+    #创建手动组网的操作目录
         mkdir -p ~/wecross-networks && cd ~/wecross-networks
     #下载WeCross
         bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_wecross.sh)
