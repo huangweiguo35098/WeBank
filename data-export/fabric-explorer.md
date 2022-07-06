@@ -6,7 +6,9 @@
     cd blockchain-explorer/examples/net1/crypto
     cp -r /home/ubuntu/fabric/fabric-samples-2.3.0/test-network/organizations/ordererOrganizations ./
     cp -r /home/ubuntu/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations ./
+
 ##修改docker-compose.yaml文件
+
 ###打开docker-compose.yaml文件
     cd ~/blockchain-explorer
     sudo vim docker-compose.yaml
