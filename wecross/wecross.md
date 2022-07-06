@@ -115,6 +115,7 @@
         docker ps
 
     #使用的network名为：docker_test
+
 ###配置内置账户
     #生成账户配置框架
     # 切换至对应跨链路由的主目录
@@ -131,6 +132,7 @@
 
     # 配Org2的admin
         bash add_account.sh -t Fabric2.0 -n fabric2_admin_org2
+
 ###完成配置
     #修改账户配置
         vim conf/accounts/fabric2_admin_org2/account.toml
@@ -156,99 +158,102 @@
                 cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/*_sk conf/accounts/fabric2_admin_org2/account.key
             # 拷贝证书
                 cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem conf/accounts/fabric2_admin_org2/account.crt
-#配置插件
-#生成插件配置框架
-    进入跨链路由的主目录，用add_chain.sh脚本在conf目录下生成Fabric链的配置框架。
 
-    cd ~/wecross-networks/routers-payment/127.0.0.1-8251-25501
+###配置插件
+    #生成插件配置框架
+        进入跨链路由的主目录，用add_chain.sh脚本在conf目录下生成Fabric链的配置框架。
 
-    # -t 链类型，-n 指定链名字，可根据-h查看使用说明
-    bash add_chain.sh -t Fabric2.0 -n fabric2
-#完成配置
-    #拷贝证书
-        # 拷贝orderer证书
-            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem conf/chains/fabric2/orderer-tlsca.crt
-        #拷贝org1证书
-            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt conf/chains/fabric2/org1-tlsca.crt
-        #拷贝org2证书
-            cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt conf/chains/fabric2/org2-tlsca.crt
-    #编辑配置文件
-        #配置文件stub.toml配置项
-#部署系统合约
-# 部署代理合约
-    bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -P
+        cd ~/wecross-networks/routers-payment/127.0.0.1-8251-25501
 
-# 部署桥接合约
-    bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -H
+        # -t 链类型，-n 指定链名字，可根据-h查看使用说明
+        bash add_chain.sh -t Fabric2.0 -n fabric2
+    #完成配置
+        #拷贝证书
+            # 拷贝orderer证书
+                cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem conf/chains/fabric2/orderer-tlsca.crt
+            #拷贝org1证书
+                cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt conf/chains/fabric2/org1-tlsca.crt
+            #拷贝org2证书
+                cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt conf/chains/fabric2/org2-tlsca.crt
+        #编辑配置文件
+            #配置文件stub.toml配置项
+
+###部署系统合约
+    # 部署代理合约
+        bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -P
+
+    # 部署桥接合约
+        bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -H
 
 
-#部署账户服务
-#下载
-cd ~/wecross-networks
-bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_account_manager.sh)
-#拷贝证书
-cd ~/wecross-networks/WeCross-Account-Manager/
-cp ~/wecross-networks/routers-test1/cert/sdk/* conf/
-#生成私钥
-bash create_rsa_keypair.sh -d conf/
-#配置
-cp conf/application-sample.toml conf/application.toml
-vim conf/application.toml
-需配置内容包括：
+##部署账户服务
 
-admin：配置admin账户，此处可默认，router中的admin账户需与此处对应，用于登录账户服务
+###下载
+    cd ~/wecross-networks
+    bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_account_manager.sh)
+###拷贝证书
+    cd ~/wecross-networks/WeCross-Account-Manager/
+    cp ~/wecross-networks/routers-test1/cert/sdk/* conf/
+###生成私钥
+    bash create_rsa_keypair.sh -d conf/
+###配置
+    cp conf/application-sample.toml conf/application.toml
+    vim conf/application.toml
+    需配置内容包括：
 
-db：配置自己的数据库账号密码
-#启动
-bash start.sh
-#启动跨链路由
-cd ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/
-bash start.sh
+    admin：配置admin账户，此处可默认，router中的admin账户需与此处对应，用于登录账户服务
 
-启动成功，输出如下：
+    db：配置自己的数据库账号密码
+###启动
+    bash start.sh
+##启动跨链路由
+    cd ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/
+    bash start.sh
 
-WeCross booting up .........
-WeCross start successfully
-#网页管理平台
-###目前来看，利用脚本build_wecross.sh生成的跨链路由目录下已经包含pages文件夹，直接
-通过[ip]:8250/s/index.html即可访问网页管理平台。###
-#访问网页管理平台被拒绝
-#若需要网页管理平台进行远程访问跨链路由，请将跨链路由所在目录的 conf/wecross.toml 文件，修改[rpc]标签下的address字段为所需IP（如：0.0.0.0）
-#重启跨链路由
-    bash stop.sh && bash start.sh
-#仍旧无法访问，或许是对外端口没开放
-    #查看端口开放情况
-    sudo iptables -vnL
-    #开放8250和25500端口
-    sudo iptables -I INPUT -p tcp --dport 8250 -j ACCEPT
-    sudo iptables -I INPUT -p tcp --dport 25500 -j ACCEPT
-    sudo iptables-save
-    ####8250端口用于web远程访问，25500端口用于跨链路由之间数据互通，不开放此端口路由将无法被识别###
-#若跨链路由下不存在pages文件夹
-#环境要求
-    # node version
-    node -v
-    结果：v8.16.0
-    # npm version
-    npm -v
-    结果：6.4.1
-#搭建node与npm
-    curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash
-    sudo apt-get install -y nodejs
-    sudo apt-get install npm
-#从远程仓库拉取代码到本地
-    git clone https://gitee.com/WeBank/WeCross-WebApp.git
-#npm安装相关依赖，请注意编译环境要求；
-    cd WeCross-WebApp
-    npm install
-#安装完依赖以后，进行npm编译源代码，编译好的静态文件在dist文件夹中
-    npm run build:prod
-    cd dist
-#在跨链路由所在文件中，创建pages文件夹
-    cd ./routers-test1/127.0.0.1-8250-25500
-    mkdir -p pages
-#将dist文件夹中编译好的静态文件全部拷贝至刚创建的pages文件夹中；
-    cp -r ./WeCross-WebApp/dist/* ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/pages/
+    启动成功，输出如下：
+
+    WeCross booting up .........
+    WeCross start successfully
+##网页管理平台
+    ###目前来看，利用脚本build_wecross.sh生成的跨链路由目录下已经包含pages文件夹，直接
+    通过[ip]:8250/s/index.html即可访问网页管理平台。###
+    #访问网页管理平台被拒绝
+    #若需要网页管理平台进行远程访问跨链路由，请将跨链路由所在目录的 conf/wecross.toml 文件，修改[rpc]标签下的address字段为所需IP（如：0.0.0.0）
+    #重启跨链路由
+        bash stop.sh && bash start.sh
+    #仍旧无法访问，或许是对外端口没开放
+        #查看端口开放情况
+        sudo iptables -vnL
+        #开放8250和25500端口
+        sudo iptables -I INPUT -p tcp --dport 8250 -j ACCEPT
+        sudo iptables -I INPUT -p tcp --dport 25500 -j ACCEPT
+        sudo iptables-save
+        ####8250端口用于web远程访问，25500端口用于跨链路由之间数据互通，不开放此端口路由将无法被识别###
+    #若跨链路由下不存在pages文件夹
+    #环境要求
+        # node version
+        node -v
+        结果：v8.16.0
+        # npm version
+        npm -v
+        结果：6.4.1
+    #搭建node与npm
+        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash
+        sudo apt-get install -y nodejs
+        sudo apt-get install npm
+    #从远程仓库拉取代码到本地
+        git clone https://gitee.com/WeBank/WeCross-WebApp.git
+    #npm安装相关依赖，请注意编译环境要求；
+        cd WeCross-WebApp
+        npm install
+    #安装完依赖以后，进行npm编译源代码，编译好的静态文件在dist文件夹中
+        npm run build:prod
+        cd dist
+    #在跨链路由所在文件中，创建pages文件夹
+        cd ./routers-test1/127.0.0.1-8250-25500
+        mkdir -p pages
+    #将dist文件夹中编译好的静态文件全部拷贝至刚创建的pages文件夹中；
+        cp -r ./WeCross-WebApp/dist/* ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/pages/
 
 
 
