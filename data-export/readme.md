@@ -47,7 +47,7 @@
     通过navicat连接数据库并创建url中/localhost:3306/后的对应数据库data_export
 
 ##运行程序
-    bash build_export.sh -m
+    bash build_export.sh
 
 ##可视化配置
     sudo docker pull grafana/grafana
