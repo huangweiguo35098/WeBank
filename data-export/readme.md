@@ -70,8 +70,7 @@
     如：想要访问的grafana数据源名为Mysql 就令“datasource”：“Mysql”
     默认情况下数据源名为MySQL，json中默认为“datasource”：“MySQL”
 #Docker 部署 fabric-explorer
-    用于输出fabric链的数据
-
+用于输出fabric链的数据
 ##下载blockchain-explorer
     git clone https://gitee.com/qicong-hu/blockchain-explorer.git
 ##复制test-network的相关配置文件到explorer目录下
