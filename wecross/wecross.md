@@ -191,11 +191,14 @@
 ###下载
     cd ~/wecross-networks
     bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_account_manager.sh)
+
 ###拷贝证书
     cd ~/wecross-networks/WeCross-Account-Manager/
     cp ~/wecross-networks/routers-test1/cert/sdk/* conf/
+
 ###生成私钥
     bash create_rsa_keypair.sh -d conf/
+
 ###配置
     cp conf/application-sample.toml conf/application.toml
     vim conf/application.toml
@@ -204,8 +207,10 @@
     admin：配置admin账户，此处可默认，router中的admin账户需与此处对应，用于登录账户服务
 
     db：配置自己的数据库账号密码
+
 ###启动
     bash start.sh
+
 ##启动跨链路由
     cd ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/
     bash start.sh
@@ -214,6 +219,7 @@
 
     WeCross booting up .........
     WeCross start successfully
+
 ##网页管理平台
     ###目前来看，利用脚本build_wecross.sh生成的跨链路由目录下已经包含pages文件夹，直接
     通过[ip]:8250/s/index.html即可访问网页管理平台。###
@@ -255,8 +261,48 @@
     #将dist文件夹中编译好的静态文件全部拷贝至刚创建的pages文件夹中；
         cp -r ./WeCross-WebApp/dist/* ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/pages/
 
+##控制台配置与运行
 
+###获取控制台
+    cd ~/wecross-networks
+    bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_console.sh)
 
+###配置控制台
+    控制台配置文件为 conf/application-toml，启动控制台前需配置
+
+    cd ~/wecross-networks/WeCross-Console
+    # 拷贝配置sample
+    cp conf/application-sample.toml conf/application.toml
+
+    # 拷贝连接跨链路由所需的证书
+    cp ~/wecross-networks/routers-test1/cert/sdk/* conf/ # 包含：ca.crt、node.nodeid、ssl.crt、ssl.key
+
+    # 配置
+    vim conf/application.toml
+        配置控制台与某个router的连接
+        [connection]
+            server =  '127.0.0.1:8250' # 对应router的ip和rpc端口
+            sslKey = 'classpath:ssl.key'
+            sslCert = 'classpath:ssl.crt'
+            caCert = 'classpath:ca.crt'
+            sslSwitch = 2 # disable ssl:2, SSL without client auth:1 , SSL with client and server auth: 0
+            # urlPrefix = '/' # v1.1.1新增配置，使用该配置可访问已配置urlPrefix的router跨链路由
+        # 可配置全局账号密码，执行命令`login`时可不输入账号密码
+        [login]
+            username = 'org1-admin'
+            password = '123456'
+
+###启动控制台
+    在跨链路由已经启动的情况下，启动控制台
+
+    cd ~/wecross/WeCross-Console
+    bash start.sh
+    # 输出下述信息表明启动成功
+    =============================================================================================
+    Welcome to WeCross console(v1.2.1)!
+    Type 'help' or 'h' for help. Type 'quit' or 'q' to quit console.
+
+    =============================================================================================
 
 
 
