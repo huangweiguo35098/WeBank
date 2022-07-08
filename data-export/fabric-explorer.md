@@ -3,8 +3,9 @@
 ##下载blockchain-explorer
     git clone https://gitee.com/qicong-hu/blockchain-explorer.git
 
-    #根据自己的fabric版本配置对应的fabric
+    
 ##配置fabric1.4
+    #根据自己的fabric版本配置对应的fabric
 
 ###复制test-network的相关配置文件到explorer目录下
     cd blockchain-explorer/examples/net1/crypto
@@ -37,6 +38,7 @@
     first-network.json中的adminCredential即浏览器的用户名和密码    
     
 ##配置fabric2.0
+    #根据自己的fabric版本配置对应的fabric
 
 ###复制test-network的相关配置文件到explorer目录下
     cd blockchain-explorer/examples/net1/crypto
