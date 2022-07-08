@@ -2,15 +2,16 @@
 用于输出fabric链的数据
 ##下载blockchain-explorer
     git clone https://gitee.com/qicong-hu/blockchain-explorer.git
+##配置fabric2.0
 
-##复制test-network的相关配置文件到explorer目录下
+###复制test-network的相关配置文件到explorer目录下
     cd blockchain-explorer/examples/net1/crypto
     cp -r /home/ubuntu/fabric/fabric-samples-2.3.0/test-network/organizations/ordererOrganizations ./
     cp -r /home/ubuntu/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations ./
 
-##修改docker-compose.yaml文件
+###修改docker-compose.yaml文件
 
-###打开docker-compose.yaml文件
+####打开docker-compose.yaml文件
     cd ~/blockchain-explorer
     sudo vim docker-compose.yaml
         networks:
@@ -18,19 +19,19 @@
                 external:
                     name: docker_test
 
-##修改first-network.json
+###修改first-network.json
 
-###查看私钥文件的文件名
+####查看私钥文件的文件名
     cd /home/ubuntu/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore
     ls
     我的结果：priv_sk
 
-###修改first-network.json
+####修改first-network.json
     cd ~/blockchain-explorer/examples/net1/connection-profile
     vim first-network.json
     #修改adminPrivateKey，将priv_sk替换为我们上面查到的私钥名,我的已经是priv_sk
 
-###查看用户密码
+####查看用户密码
     first-network.json中的adminCredential即浏览器的用户名和密码
 
 ##启动fabric浏览器
