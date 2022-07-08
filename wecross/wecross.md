@@ -76,6 +76,94 @@
         # 部署桥接合约
         bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -H
 
+##接入Hyperledger Fabric 1.4
+
+###搭建区块链,基于wecross提供的demo快速搭建
+    #检查go,docker,docker Compose
+    
+    mkdir -p ~/fabric && cd ~/fabric
+    bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_demo.sh)
+
+    # 拷贝其中的Fabric demo链环境
+    cp ./wecross-demo/fabric/* ./
+
+    # 搭链，若出错，执行 bash clear.sh 后重新 bash build.sh
+    bash build.sh
+
+    #搭建成功，查看Fabric链各个容器运行状态。
+        docker ps
+
+    #使用的network名为：docker_test
+
+###配置内置账户
+    #生成账户配置框架
+    # 切换至对应跨链路由的主目录
+    cd ~/wecross-networks/routers-fabric/127.0.0.1-8251-25501/
+
+    # 用脚本生成Fabric账户配置：账户类型（Fabric1.4），账户名（fabric_admin）
+    # 接入Fabric链，需要配置一个admin账户
+    bash add_account.sh -t Fabric1.4 -n fabric_admin 
+
+
+    # 为Fabric链的每个Org都配置一个admin账户，此处有两个org（Org1和Org2），分别配两个账户
+
+    # 配Org1的admin
+    bash add_account.sh -t Fabric1.4 -n fabric_admin_org1
+
+    # 配Org2的admin
+    bash add_account.sh -t Fabric1.4 -n fabric_admin_org2
+
+###完成配置
+    #修改账户配置
+        vim conf/accounts/fabric_admin_org2/account.toml
+        # 修改mspid，将 'Org1MSP' 更改为 'Org2MSP'
+    #拷贝证书文件
+        #Fabric链的证书位于organizations目录，请参考以下命令并根据实际情况完成相关证书的拷贝
+
+        cd ~/wecross-networks/routers-fabric/127.0.0.1-8251-25501
+        # 配置fabric_admin 
+            # 拷贝私钥
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk   conf/accounts/fabric_admin/account.key
+            # 拷贝证书
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem conf/accounts/fabric_admin/account.crt
+
+        # 配置fabric_admin_org1 
+            # 拷贝私钥
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk   conf/accounts/fabric_admin_org1/account.key
+            # 拷贝证书
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem conf/accounts/fabric_admin_org1/account.crt
+
+        # 配置fabric_admin_org2 
+            # 拷贝私钥
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/*_sk   conf/accounts/fabric_admin_org2/account.key
+            # 拷贝证书
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem  conf/accounts/fabric_admin_org2/account.crt
+
+###配置插件
+    #生成插件配置框架
+        进入跨链路由的主目录，用add_chain.sh脚本在conf目录下生成Fabric链的配置框架。
+
+        cd ~/wecross-networks/routers-fabric/127.0.0.1-8251-25501
+
+        # -t 链类型，-n 指定链名字，可根据-h查看使用说明
+        bash add_chain.sh -t Fabric1.4 -n fabric
+    #完成配置
+        #拷贝证书
+            # 拷贝orderer证书
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem   conf/chains/fabric/orderer-tlsca.crt
+            #拷贝org1证书
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt conf/chains/fabric/org1-tlsca.crt
+            #拷贝org2证书
+                cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt conf/chains/fabric/org2-tlsca.crt
+        #编辑配置文件
+            #配置文件stub.toml配置项
+
+###部署系统合约
+    # 部署代理合约
+    bash deploy_system_contract.sh -t Fabric1.4 -c chains/fabric -P
+
+    # 部署桥接合约
+    bash deploy_system_contract.sh -t Fabric1.4 -c chains/fabric -H
 
 ##接入Hyperledger Fabric 2
 
