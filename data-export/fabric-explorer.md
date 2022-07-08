@@ -2,6 +2,7 @@
 用于输出fabric链的数据
 ##下载blockchain-explorer
     git clone https://gitee.com/qicong-hu/blockchain-explorer.git
+    
 ##配置fabric2.0
 
 ###复制test-network的相关配置文件到explorer目录下
