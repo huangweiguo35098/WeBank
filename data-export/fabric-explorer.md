@@ -3,7 +3,7 @@
 ##下载blockchain-explorer
     git clone https://gitee.com/qicong-hu/blockchain-explorer.git
 
-# 根据自己的fabric版本配置对应的fabric
+    #根据自己的fabric版本配置对应的fabric
 ##配置fabric1.4
 
 ###复制test-network的相关配置文件到explorer目录下
