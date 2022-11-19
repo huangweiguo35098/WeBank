@@ -392,6 +392,18 @@
 
     =============================================================================================
 
+##常见错误
+### wecross 启动报错
+    2022-11-19 20:16:07,545 main ERROR Null object returned for RollingFile in Appenders.
+    2022-11-19 20:16:07,546 main ERROR Null object returned for RollingFile in Appenders.
+    2022-11-19 20:16:07,546 main ERROR Null object returned for RollingFile in Appenders.
+    2022-11-19 20:16:07,546 main ERROR Null object returned for RollingFile in Appenders.
+    2022-11-19 20:16:07,547 main ERROR Null object returned for RollingFile in Appenders.
+    2022-11-19 20:16:07,554 main ERROR No appender named warnLog was configured
+    Exception in thread "main" java.lang.ExceptionInInitializerError
+    Caused by: org.apache.logging.log4j.core.config.ConfigurationException: No appenders are available for AsyncAppender asyncWARN
+
+    解决思路： 切换root用户登陆
 
 
 
