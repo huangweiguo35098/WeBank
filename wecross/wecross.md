@@ -1,4 +1,4 @@
-#在ubuntu下搭建wecross
+# 在ubuntu下搭建wecross
 
     利用wecross可以使得使用者在不同链之间进行数据交流，具体表现为：用户A可以通过部署在本地的跨链路由向用户B所部署的跨链路由发起
     调用数据的请求，其中桥接合约用来将调用请求添加到任务列表，跨链路由会获取该请求并通过路由之间进行数据交换，代理合约则用来调用
@@ -6,13 +6,13 @@
     简单来说对于一条部署在本地的链想要访问其他服务器上的链，只需部署一个跨链路由并将其接入，就可以与其他的跨链路由下的
     链进行数据交流了（个人理解）。需要注意的是跨链路由是通过p2p进行数据交流的，并且只会在具有相同根证书的路由之间进行数据交流。
     
-##创建手动组网的操作目录
+## 创建手动组网的操作目录
     mkdir -p ~/wecross-networks && cd ~/wecross-networks
 
-##下载WeCross
+## 下载WeCross
     bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_wecross.sh)
 
-##部署跨链路由
+## 部署跨链路由
     cd ~/wecross-networks
     vim ipfile
 
@@ -28,19 +28,19 @@
     -f 指定需要生成的WeCross跨链路由的列表，包括ip地址，rpc端口，p2p端口，生成后的router已完成互联配置
     -c 指定生成路由所需的根证书位置
 
-##接入FISCO BCOS 2.0
+## 接入FISCO BCOS 2.0
 
-###生成配置框架
+### 生成配置框架
     cd ~/wecross-networks/routers-test1/127.0.0.1-8250-25500 ###跨链路由位置
     # -t 链类型，-n 指定链名字，可根据-h查看使用说明
     #### 确保同一跨链分区下不同跨链路由中链名字应当不同，否则无法取得连接的路由下的资源 ####
     bash add_chain.sh -t BCOS2.0 -n bcos-test1
 
-###拷贝证书
+### 拷贝证书
     # 证书目录以实际情况为准
     cp -r ~/fisco/nodes/0.0.0.0/sdk/*   ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/conf/chains/bcos-test1/
 
-###编辑配置文件
+### 编辑配置文件
     vi conf/chains/bcos-test1/stub.toml
     [common]                # 通用配置
         name = 'bcos'       # stub配置名称，即 [stubName] = bcos
@@ -62,23 +62,23 @@
         gmEnSslKey = 'gm/gmensdk.key'   # 国密加密密钥
         timeout = 5000                  # SDK请求超时时间
         connectionsStr = ['127.0.0.1:20200']    # 连接列表
-###部署系统合约
-    #非国密链
-        # 部署代理合约
-        bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos-test1 -P
+### 部署系统合约
+#### 非国密链
+    # 部署代理合约
+    bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos-test1 -P
 
-        # 部署桥接合约
-        bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos-test1 -H
-    #国密链
-        # 部署代理合约
-        bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -P
+    # 部署桥接合约
+    bash deploy_system_contract.sh -t BCOS2.0 -c chains/bcos-test1 -H
+#### 国密链
+    # 部署代理合约
+    bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -P
 
-        # 部署桥接合约
-        bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -H
+    # 部署桥接合约
+    bash deploy_system_contract.sh -t GM_BCOS2.0 -c chains/bcos-test1 -H
 
-##接入Hyperledger Fabric 1.4
+## 接入Hyperledger Fabric 1.4
 
-###搭建区块链,基于wecross提供的demo快速搭建
+### 搭建区块链,基于wecross提供的demo快速搭建
     #检查go,docker,docker Compose
     
     mkdir -p ~/fabric && cd ~/fabric
@@ -95,7 +95,7 @@
 
     #使用的network名为：docker_test
 
-###配置内置账户
+### 配置内置账户
     #生成账户配置框架
     # 切换至对应跨链路由的主目录
     cd ~/wecross-networks/routers-fabric/127.0.0.1-8251-25501/
@@ -113,7 +113,7 @@
     # 配Org2的admin
     bash add_account.sh -t Fabric1.4 -n fabric_admin_org2
 
-###完成配置
+### 完成配置
     #修改账户配置
         vim conf/accounts/fabric_admin_org2/account.toml
         # 修改mspid，将 'Org1MSP' 更改为 'Org2MSP'
@@ -139,7 +139,7 @@
             # 拷贝证书
                 cp /home/ubuntu/fabric/fabric-samples-1.4.4/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem  conf/accounts/fabric_admin_org2/account.crt
 
-###配置插件
+### 配置插件
     #生成插件配置框架
         进入跨链路由的主目录，用add_chain.sh脚本在conf目录下生成Fabric链的配置框架。
 
@@ -158,16 +158,16 @@
         #编辑配置文件
             #配置文件stub.toml配置项
 
-###部署系统合约
+### 部署系统合约
     # 部署代理合约
     bash deploy_system_contract.sh -t Fabric1.4 -c chains/fabric -P
 
     # 部署桥接合约
     bash deploy_system_contract.sh -t Fabric1.4 -c chains/fabric -H
 
-##接入Hyperledger Fabric 2
+## 接入Hyperledger Fabric 2
 
-###搭建区块链,基于wecross提供的demo快速搭建
+### 搭建区块链,基于wecross提供的demo快速搭建
     #检查go,docker,docker Compose
         go version
     #安装go
@@ -204,7 +204,7 @@
 
     #使用的network名为：docker_test
 
-###配置内置账户
+### 配置内置账户
     #生成账户配置框架
     # 切换至对应跨链路由的主目录
         cd ~/wecross-networks/routers-test1/127.0.0.1-8251-25501/
@@ -221,7 +221,7 @@
     # 配Org2的admin
         bash add_account.sh -t Fabric2.0 -n fabric2_admin_org2
 
-###完成配置
+### 完成配置
     #修改账户配置
         vim conf/accounts/fabric2_admin_org2/account.toml
         # 修改mspid，将 'Org1MSP' 更改为 'Org2MSP'
@@ -247,7 +247,7 @@
             # 拷贝证书
                 cp ~/fabric/fabric-samples-2.3.0/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem conf/accounts/fabric2_admin_org2/account.crt
 
-###配置插件
+### 配置插件
     #生成插件配置框架
         进入跨链路由的主目录，用add_chain.sh脚本在conf目录下生成Fabric链的配置框架。
 
@@ -266,7 +266,7 @@
         #编辑配置文件
             #配置文件stub.toml配置项
 
-###部署系统合约
+### 部署系统合约
     # 部署代理合约
         bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -P
 
@@ -274,20 +274,20 @@
         bash deploy_system_contract.sh -t Fabric2.0 -c chains/fabric2 -H
 
 
-##部署账户服务
+## 部署账户服务
 
 ###下载
     cd ~/wecross-networks
     bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_account_manager.sh)
 
-###拷贝证书
+### 拷贝证书
     cd ~/wecross-networks/WeCross-Account-Manager/
     cp ~/wecross-networks/routers-test1/cert/sdk/* conf/
 
-###生成私钥
+### 生成私钥
     bash create_rsa_keypair.sh -d conf/
 
-###配置
+### 配置
     cp conf/application-sample.toml conf/application.toml
     vim conf/application.toml
     需配置内容包括：
@@ -296,10 +296,10 @@
 
     db：配置自己的数据库账号密码
 
-###启动
+### 启动
     bash start.sh
 
-##启动跨链路由
+## 启动跨链路由
     cd ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/
     bash start.sh
 
@@ -308,7 +308,7 @@
     WeCross booting up .........
     WeCross start successfully
 
-##网页管理平台
+## 网页管理平台
     ###目前来看，利用脚本build_wecross.sh生成的跨链路由目录下已经包含pages文件夹，直接
     通过[ip]:8250/s/index.html即可访问网页管理平台。###
     #访问网页管理平台被拒绝
@@ -349,13 +349,13 @@
     #将dist文件夹中编译好的静态文件全部拷贝至刚创建的pages文件夹中；
         cp -r ./WeCross-WebApp/dist/* ~/wecross-networks/routers-test1/127.0.0.1-8250-25500/pages/
 
-##控制台配置与运行
+## 控制台配置与运行
 
-###获取控制台
+### 获取控制台
     cd ~/wecross-networks
     bash <(curl -sL https://gitee.com/WeBank/WeCross/raw/master/scripts/download_console.sh)
 
-###配置控制台
+### 配置控制台
     控制台配置文件为 conf/application-toml，启动控制台前需配置
 
     cd ~/wecross-networks/WeCross-Console
@@ -380,7 +380,7 @@
             username = 'org1-admin'
             password = '123456'
 
-###启动控制台
+### 启动控制台
     在跨链路由已经启动的情况下，启动控制台
 
     cd ~/wecross/WeCross-Console
@@ -392,7 +392,7 @@
 
     =============================================================================================
 
-##常见错误
+## 常见错误
 ### wecross 启动报错
     2022-11-19 20:16:07,545 main ERROR Null object returned for RollingFile in Appenders.
     2022-11-19 20:16:07,546 main ERROR Null object returned for RollingFile in Appenders.
