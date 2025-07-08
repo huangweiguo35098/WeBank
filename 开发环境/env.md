@@ -1,5 +1,36 @@
 # Ubuntu下各种开发环境的搭建
 ## Docker
+
+### 安装Docker
+参考了https://linux.do/t/topic/207951 的方法
+#### 安装必要支持
+    sudo apt install ca-certificates curl gnupg lsb-release
+
+#### 添加gpg key
+    #添加 Docker 官方gpg key （可能国内现在访问会存在问题）
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    #阿里源（推荐使用阿里的gpg KEY）
+    curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+#### 添加源
+    #Docker官方源
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    
+    #阿里apt源  
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#### 安装
+    #docker本体
+    sudo apt install docker-ce docker-ce-cli containerd.io
+
+    #安装docker-compose
+    sudo apt install docker-compose
+#### 安装Docker 命令补全工具
+    sudo apt-get install bash-completion
+    sudo curl -L https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
+    source /etc/bash_completion.d/docker.sh
+
 ### 检查Docker
 docker --version
 结果：Docker version 20.10.0, build 7287ab3
